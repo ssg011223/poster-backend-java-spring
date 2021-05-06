@@ -10,7 +10,7 @@ public class PostService {
     @Autowired
     PostRepository postRepository;
 
-    Post findById(int id) {
+    public Post findById(int id) {
         return postRepository.findById(id).orElse(null);
     }
 

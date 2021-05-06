@@ -8,25 +8,25 @@ import java.time.LocalDateTime;
 @Entity
 public class Post {
     @Id
-    int id;
+    private int id;
 
-    int personId;
+    private int personId;
 
-    String message;
+    private String message;
 
-    boolean hasImage;
+    private boolean hasImage;
 
-    boolean hasVideo;
+    private boolean hasVideo;
 
-    LocalDateTime postDate;
+    private LocalDateTime postDate;
 
-    int adomCount;
+    private int adomCount;
 
-    int commentCount;
+    private int commentCount;
 
-    int shareCount;
+    private int shareCount;
 
-    int imageCount;
+    private int imageCount;
 
     public Post() {
     }
