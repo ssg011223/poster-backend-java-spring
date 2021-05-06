@@ -1,7 +1,6 @@
 package com.codecool.poster.model;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.time.LocalDateTime;
 
 //TODO: Change personId from int to Person
@@ -10,7 +9,9 @@ public class Post {
     @Id
     private int id;
 
-    private int personId;
+    @ManyToOne
+    @JoinColumn(referencedColumnName = "id")
+    private Person person;
 
     private String message;
 
@@ -31,9 +32,9 @@ public class Post {
     public Post() {
     }
 
-    public Post(int id, int personId, String message, boolean hasImage, boolean hasVideo, LocalDateTime postDate, int adomCount, int commentCount, int shareCount, int imageCount) {
+    public Post(int id, Person person, String message, boolean hasImage, boolean hasVideo, LocalDateTime postDate, int adomCount, int commentCount, int shareCount, int imageCount) {
         this.id = id;
-        this.personId = personId;
+        this.person = person;
         this.message = message;
         this.hasImage = hasImage;
         this.hasVideo = hasVideo;
@@ -52,12 +53,12 @@ public class Post {
         this.id = id;
     }
 
-    public int getPersonId() {
-        return personId;
+    public Person getPerson() {
+        return person;
     }
 
-    public void setPersonId(int personId) {
-        this.personId = personId;
+    public void setPerson(Person person) {
+        this.person = person;
     }
 
     public String getMessage() {
