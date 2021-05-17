@@ -25,6 +25,8 @@ public class Person implements UserDetails {
 
     private String username;
 
+    private String email;
+
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
 
@@ -55,7 +57,6 @@ public class Person implements UserDetails {
 
     @Override
     public boolean isAccountNonExpired() { return true; }
-
 
     @Override
     public boolean isAccountNonLocked() { return !locked; }
