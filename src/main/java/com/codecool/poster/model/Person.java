@@ -1,14 +1,26 @@
 package com.codecool.poster.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.Collection;
+import java.util.Collections;
 
 @Entity
-public class Person {
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class Person implements UserDetails {
+
     @Id
+    @GeneratedValue
     private int id;
 
     private String username;
@@ -28,78 +40,29 @@ public class Person {
 
     private String profileImageRoute;
 
-    public Person() {
+    @Enumerated(EnumType.STRING)
+    private UserRole userRole;
+
+    private Boolean locked = false;
+
+    private Boolean enabled = false;
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        SimpleGrantedAuthority authority = new SimpleGrantedAuthority(userRole.name());
+        return Collections.singletonList(authority);
     }
 
-    public int getId() {
-        return id;
-    }
+    @Override
+    public boolean isAccountNonExpired() { return true; }
 
-    public void setId(int id) {
-        this.id = id;
-    }
 
-    public String getUsername() {
-        return username;
-    }
+    @Override
+    public boolean isAccountNonLocked() { return !locked; }
 
-    public void setUsername(String username) {
-        this.username = username;
-    }
+    @Override
+    public boolean isCredentialsNonExpired() { return true; }
 
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public LocalDateTime getBirthDate() {
-        return birthDate;
-    }
-
-    public void setBirthDate(LocalDateTime birthDate) {
-        this.birthDate = birthDate;
-    }
-
-    public LocalDateTime getRegistrationDate() {
-        return registrationDate;
-    }
-
-    public void setRegistrationDate(LocalDateTime registrationDate) {
-        this.registrationDate = registrationDate;
-    }
-
-    public int getFollowersCount() {
-        return followersCount;
-    }
-
-    public void setFollowersCount(int followerCount) {
-        this.followersCount = followerCount;
-    }
-
-    public int getFollowedCount() {
-        return followedCount;
-    }
-
-    public void setFollowedCount(int followedCount) {
-        this.followedCount = followedCount;
-    }
-
-    public String getProfileImageRoute() {
-        return profileImageRoute;
-    }
-
-    public void setProfileImageRoute(String profileImageRoute) {
-        this.profileImageRoute = profileImageRoute;
-    }
+    @Override
+    public boolean isEnabled() { return enabled; }
 }
