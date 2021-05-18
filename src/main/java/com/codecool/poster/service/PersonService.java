@@ -9,6 +9,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+
 @Service
 @AllArgsConstructor
 public class PersonService implements UserDetailsService {
@@ -21,20 +23,31 @@ public class PersonService implements UserDetailsService {
         return null;
     }
 
-    public void signUpUser(Person person) {
-        boolean userExists = personRepository
+    public String signUpUser(Person person) {
+        if (person.getUsername() == null || person.getEmail() == null || person.getBirthDate() == null || person.getPassword() == null)
+            return "Registration failed!";
+
+        if (person.getBirthDate().isAfter(LocalDate.from(LocalDate.now()))) {
+            return "Birth date is not valid";
+        }
+
+        boolean emailExists = personRepository
                 .findByEmail(person.getEmail())
                 .isPresent();
 
-        if (userExists) {
-            throw new IllegalStateException("email already taken");
-        }
+        boolean usernameExists = personRepository
+                .findByUsername(person.getUsername())
+                .isPresent();
 
-        String encodedPassword = bCryptPasswordEncoder
-                .encode(person.getPassword());
+        if (emailExists || usernameExists)
+            return "Email or username already taken!";
+
+        String encodedPassword = bCryptPasswordEncoder.encode(person.getPassword());
 
         person.setPassword(encodedPassword);
 
         personRepository.save(person);
+
+        return "success";
     }
 }
