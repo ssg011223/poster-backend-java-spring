@@ -19,8 +19,8 @@ public class PostController {
     }
 
     @PostMapping("/add")
-    public void savePost(@RequestBody Post post) {
-        postService.savePost(post);
+    public boolean savePost(@RequestBody Post post) {
+        return postService.savePost(post);
     }
 
 }

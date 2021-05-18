@@ -13,15 +13,22 @@ import java.util.List;
 @Service
 public class PostService {
     @Autowired
-    PostRepository postRepository;
+    private PostRepository postRepository;
+    private final int MAX_POST_MESSAGE_LENGTH = 250;
 
     public Post findById(int id) {
         return postRepository.findById(id).orElse(null);
     }
 
-    public void savePost(Post post) {
+    public boolean savePost(Post post) {
+        if (!checkPostMessageLength(post.getMessage())) return false;
         post.setPostDate(LocalDateTime.now());
         postRepository.save(post);
+        return true;
+    }
+
+    private boolean checkPostMessageLength(String message) {
+        return message.length() <= MAX_POST_MESSAGE_LENGTH;
     }
 
 }
