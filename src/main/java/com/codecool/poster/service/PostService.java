@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.List;
 
-//TODO: Make Pageable for limit offset requests
+
 @Service
 public class PostService {
     @Autowired
