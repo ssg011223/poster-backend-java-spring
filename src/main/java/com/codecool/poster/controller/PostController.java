@@ -11,17 +11,16 @@ import java.util.List;
 @RequestMapping("/posts")
 public class PostController {
     @Autowired
-    PostService postService;
+    private PostService postService;
 
     @GetMapping("/{id}")
-    Post getPostWithId(@PathVariable Integer id) {
+    public Post getPostWithId(@PathVariable Integer id) {
         return postService.findById(id);
     }
 
-    //TODO: Remove getAllPosts and make Pageable version
-    @GetMapping("")
-    List<Post> getAllPosts() {
-        return postService.findAll();
+    @PostMapping("/add")
+    public void savePost(@RequestBody Post post) {
+        postService.savePost(post);
     }
 
 }
