@@ -14,7 +14,6 @@ public class MediaService {
         String extension = FilenameUtils.getExtension(file.getOriginalFilename());
         try {
             file.transferTo(new File("/home/gergo/projects/javaAdvanced/poster-backend-java-spring/src/main/resources/media/" + newFileName + "." + extension));
-            System.out.println(file.getContentType() + file.getSize());
         } catch (IOException e) {
             e.printStackTrace();
             return false;
