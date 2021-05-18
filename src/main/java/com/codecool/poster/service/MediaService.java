@@ -1,6 +1,9 @@
 package com.codecool.poster.service;
 
+import com.codecool.poster.model.Media;
+import com.codecool.poster.repository.MediaRepository;
 import org.apache.commons.io.FilenameUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -13,6 +16,8 @@ import java.util.UUID;
 
 @Service
 public class MediaService {
+    @Autowired
+    private MediaRepository mediaRepository;
 
     public String submit(MultipartFile file) {
         String extension = FilenameUtils.getExtension(file.getOriginalFilename());
@@ -31,5 +36,9 @@ public class MediaService {
             fileRoutes.add(submit(file));
         }
         return fileRoutes;
+    }
+
+    public void saveAll(Iterable<Media> media) {
+        mediaRepository.saveAll(media);
     }
 }

@@ -32,14 +32,23 @@ public class PostController {
     @PostMapping(value = "/add")
     public boolean savePost(@RequestParam String message,
                             @RequestParam int person_id,
-                            @RequestParam("file") MultipartFile[] files) {
+                            @RequestParam("files") MultipartFile[] files) {
 
         boolean hasImage = false;
         boolean hasVideo = false;
         List<Media> media = new ArrayList<>(4);
+        Post.PostBuilder postBuilder = Post
+                .builder()
+                .message(message)
+                .person(Person.builder()
+                        .id(person_id)
+                        .build());
 
-        if (files.length > 0) {
+        Post finalPost = postBuilder.build();
+
+        if (files[0].getSize() > 0) {
             for (MultipartFile file: files) {
+                System.out.println(file.getSize());
                 switch (file.getContentType()) {
                     case "image/png":
                         hasImage = true;
@@ -57,29 +66,30 @@ public class PostController {
                         hasVideo = true;
                         break;
                 }
-                if ((hasImage && hasVideo) || (!hasImage && !hasVideo) || (hasVideo && files.length > 1)) return false;
+                if ((hasImage && hasVideo) || (!hasImage && !hasVideo) || (hasVideo && files.length > 1) || (hasImage && files.length > 4)) return false;
             }
+                finalPost = postBuilder
+                    .hasImage(hasImage)
+                    .hasVideo(hasVideo)
+                    .imageCount(hasImage ? files.length : 0)
+                    .build();
+
             MediaTypeEnum mediaType = MediaTypeEnum.IMAGE;
             if (hasVideo) mediaType = MediaTypeEnum.VIDEO;
             Collection<String> routes = mediaService.submit(files);
             for (String route: routes) {
                 Media tempMedia = Media.builder()
+                        .post(finalPost)
                         .mediaRoute(route)
                         .mediaType(mediaType)
                         .build();
                 media.add(tempMedia);
             }
         }
-        Post post = Post.builder()
-                .message(message)
-                .person(Person.builder()
-                        .id(person_id)
-                        .build())
-                .hasImage(hasImage)
-                .hasVideo(hasVideo)
-                .imageCount(hasImage ? media.size() : 0)
-                .build();
-        return postService.savePost(post);
+
+        postService.savePost(finalPost);
+        mediaService.saveAll(media);
+        return true;
     }
 
 }
