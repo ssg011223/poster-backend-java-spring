@@ -2,6 +2,7 @@ package com.codecool.poster.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
@@ -9,6 +10,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.Collections;
@@ -17,20 +19,24 @@ import java.util.Collections;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
+@Table(name = "person")
 public class Person implements UserDetails {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
     private String username;
+
+    private String email;
 
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
 
     private String description;
 
-    private LocalDateTime birthDate;
+    private LocalDate birthDate;
 
     private LocalDateTime registrationDate;
 
@@ -56,7 +62,6 @@ public class Person implements UserDetails {
     @Override
     public boolean isAccountNonExpired() { return true; }
 
-
     @Override
     public boolean isAccountNonLocked() { return !locked; }
 
@@ -65,4 +70,5 @@ public class Person implements UserDetails {
 
     @Override
     public boolean isEnabled() { return enabled; }
+
 }
