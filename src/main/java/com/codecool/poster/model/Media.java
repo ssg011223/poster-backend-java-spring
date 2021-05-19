@@ -6,36 +6,24 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 @Builder
 @Entity
-public class Post {
+public class Media {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
     @ManyToOne
     @JoinColumn(referencedColumnName = "id")
-    private Person person;
+    private Post post;
 
-    private String message;
+    private String mediaRoute;
 
-    private boolean hasImage;
-
-    private boolean hasVideo;
-
-    private LocalDateTime postDate;
-
-    private int adomCount;
-
-    private int commentCount;
-
-    private int shareCount;
-
-    private int imageCount;
+    @Enumerated(EnumType.STRING)
+    private MediaTypeEnum mediaType;
 
 }
