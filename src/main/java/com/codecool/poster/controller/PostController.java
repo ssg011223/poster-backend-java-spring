@@ -32,7 +32,7 @@ public class PostController {
     @PostMapping(value = "/add")
     public boolean savePost(@RequestParam String message,
                             @RequestParam int person_id,
-                            @RequestParam("files") MultipartFile[] files) {
+                            @RequestParam(value = "files", required = false) MultipartFile[] files) {
 
         boolean hasImage = false;
         boolean hasVideo = false;
@@ -46,9 +46,8 @@ public class PostController {
 
         Post finalPost = postBuilder.build();
 
-        if (files[0].getSize() > 0) {
+        if (!(files == null)) {
             for (MultipartFile file: files) {
-                System.out.println(file.getSize());
                 switch (file.getContentType()) {
                     case "image/png":
                         hasImage = true;
