@@ -44,7 +44,9 @@ public class Person implements UserDetails {
 
     private int followedCount;
 
-    private String profileImageRoute;
+    private int profileImageId;
+
+    private int profileBackgroundImageId;
 
     @Enumerated(EnumType.STRING)
     private UserRole userRole;
