@@ -23,6 +23,7 @@ public class Media {
 
     private String mediaRoute;
 
+    @Enumerated(EnumType.STRING)
     private MediaTypeEnum mediaType;
 
 }

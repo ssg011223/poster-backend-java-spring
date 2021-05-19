@@ -7,8 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -40,5 +39,18 @@ public class MediaService {
 
     public void saveAll(Iterable<Media> media) {
         mediaRepository.saveAll(media);
+    }
+
+    public InputStream getImageInputStreamById(int id) {
+        Media media = mediaRepository.findById(id).orElse(null);
+        if (media == null) return null;
+        String route = media.getMediaRoute();
+        InputStream in = null;
+        try {
+            in = new FileInputStream(route);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        return in;
     }
 }
