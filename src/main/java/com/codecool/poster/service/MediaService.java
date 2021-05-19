@@ -2,6 +2,8 @@ package com.codecool.poster.service;
 
 import com.codecool.poster.model.Media;
 import com.codecool.poster.repository.MediaRepository;
+import com.codecool.poster.repository.PersonMediaRepository;
+import lombok.AllArgsConstructor;
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,13 +16,14 @@ import java.util.List;
 import java.util.UUID;
 
 @Service
+@AllArgsConstructor
 public class MediaService {
-    @Autowired
-    private MediaRepository mediaRepository;
+
+    private final MediaRepository mediaRepository;
 
     public String submit(MultipartFile file) {
         String extension = FilenameUtils.getExtension(file.getOriginalFilename());
-        String route = "/home/gergo/projects/javaAdvanced/poster-backend-java-spring/src/main/resources/media/" + UUID.randomUUID() + "." + extension;
+        String route = "/poster-backend-java-spring/src/main/resources/media/" + UUID.randomUUID() + "." + extension;
         try {
             file.transferTo(new File(route));
         } catch (IOException e) {
