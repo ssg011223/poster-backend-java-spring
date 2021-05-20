@@ -48,7 +48,7 @@ public class MediaService {
         return mediaRepository.findAllByPostId(id);
     }
 
-    public InputStream getImageInputStreamById(int id) {
+    public InputStream getImageInputStreamById(long id) {
         Media media = mediaRepository.findById(id).orElse(null);
         if (media == null) return null;
         String route = media.getMediaRoute();
