@@ -44,7 +44,7 @@ public class MediaService {
         mediaRepository.saveAll(media);
     }
 
-    public Collection<Media> findAllByPostId(int id) {
+    public Collection<Media> findAllByPostId(long id) {
         return mediaRepository.findAllByPostId(id);
     }
 
