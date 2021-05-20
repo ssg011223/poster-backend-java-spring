@@ -22,7 +22,7 @@ public class MediaController {
 
     @GetMapping(value = "/{id}", produces = {MediaType.IMAGE_GIF_VALUE, MediaType.IMAGE_PNG_VALUE, MediaType.IMAGE_JPEG_VALUE})
     public @ResponseBody byte[] getImage(@PathVariable String id) throws IOException {
-        InputStream in = mediaService.getImageInputStreamById(Integer.parseInt(id));
+        InputStream in = mediaService.getImageInputStreamById(Long.parseLong(id));
         return IOUtils.toByteArray(in);
     }
 }

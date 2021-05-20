@@ -23,7 +23,7 @@ public class MediaService {
 
     public String submit(MultipartFile file) {
         String extension = FilenameUtils.getExtension(file.getOriginalFilename());
-        String route = "/poster-backend-java-spring/src/main/resources/media/" + UUID.randomUUID() + "." + extension;
+        String route = "/home/gergo/projects/javaAdvanced/poster-backend-java-spring/src/main/resources/media/" + UUID.randomUUID() + "." + extension;
         try {
             file.transferTo(new File(route));
         } catch (IOException e) {
@@ -44,7 +44,11 @@ public class MediaService {
         mediaRepository.saveAll(media);
     }
 
-    public InputStream getImageInputStreamById(int id) {
+    public Collection<Media> findAllByPostId(long id) {
+        return mediaRepository.findAllByPostId(id);
+    }
+
+    public InputStream getImageInputStreamById(long id) {
         Media media = mediaRepository.findById(id).orElse(null);
         if (media == null) return null;
         String route = media.getMediaRoute();

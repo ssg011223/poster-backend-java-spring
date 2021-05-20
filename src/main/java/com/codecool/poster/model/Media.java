@@ -1,5 +1,6 @@
 package com.codecool.poster.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -13,14 +14,17 @@ import javax.persistence.*;
 @Builder
 @Entity
 public class Media {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private long id;
 
     @ManyToOne
     @JoinColumn(referencedColumnName = "id")
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private Post post;
 
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String mediaRoute;
 
     @Enumerated(EnumType.STRING)

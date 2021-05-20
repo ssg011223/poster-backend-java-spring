@@ -1,9 +1,6 @@
 package com.codecool.poster.controller;
 
-import com.codecool.poster.model.Media;
-import com.codecool.poster.model.MediaTypeEnum;
-import com.codecool.poster.model.Person;
-import com.codecool.poster.model.Post;
+import com.codecool.poster.model.*;
 import com.codecool.poster.service.MediaService;
 import com.codecool.poster.service.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +8,7 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -23,6 +21,18 @@ public class PostController {
     private PostService postService;
     @Autowired
     private MediaService mediaService;
+
+    @GetMapping()
+    public Collection<SendPost> getAllPosts(HttpServletResponse response) {
+        Collection<SendPost> postsToSend = new ArrayList<>();
+        Collection<Post> posts = postService.findAll();
+        for (Post post: posts) {
+            Collection<Media> media = mediaService.findAllByPostId(post.getId());
+            postsToSend.add(new SendPost(post, media));
+        }
+        response.addHeader("Access-Control-Allow-Origin", "*");
+        return postsToSend;
+    }
 
     @GetMapping("/{id}")
     public Post getPostWithId(@PathVariable Integer id) {
