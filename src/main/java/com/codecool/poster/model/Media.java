@@ -14,9 +14,10 @@ import javax.persistence.*;
 @Builder
 @Entity
 public class Media {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private long id;
 
     @ManyToOne
     @JoinColumn(referencedColumnName = "id")
