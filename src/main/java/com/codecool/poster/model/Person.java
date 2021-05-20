@@ -25,7 +25,7 @@ public class Person implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private long id;
 
     private String username;
 
@@ -44,9 +44,9 @@ public class Person implements UserDetails {
 
     private int followedCount;
 
-    private int profileImageId;
+    private long profileImageId;
 
-    private int profileBackgroundImageId;
+    private long profileBackgroundImageId;
 
     @Enumerated(EnumType.STRING)
     private UserRole userRole;
