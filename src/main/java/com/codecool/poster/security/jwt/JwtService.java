@@ -23,7 +23,6 @@ public class JwtService {
     private int validForMilliseconds;
 
     private final String rolesFieldName = "roles";
-    private final String idFieldName = "id";
 
     @PostConstruct
     protected void init() {
@@ -32,7 +31,7 @@ public class JwtService {
 
     public String createToken(long id, String username, List<String> roles) {
         Claims claims = Jwts.claims().setSubject(username);
-        claims.put(idFieldName, id);
+        claims.setId(String.valueOf(id));
         claims.put(rolesFieldName, roles);
         Date now = new Date();
         Date validUntil = new Date(now.getTime() + validForMilliseconds);
@@ -73,5 +72,10 @@ public class JwtService {
             authorities.add(new SimpleGrantedAuthority(role));
         }
         return new UsernamePasswordAuthenticationToken(username, "", authorities);
+    }
+
+    public long parseIdFromTokenInfo(String token) {
+        Claims body = Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody();
+        return Long.parseLong(body.getId());
     }
 }
