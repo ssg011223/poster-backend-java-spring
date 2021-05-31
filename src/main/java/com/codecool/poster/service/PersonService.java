@@ -25,7 +25,7 @@ public class PersonService implements UserDetailsService {
         return null;
     }
 
-    public String editPerson(int id, MultipartFile newProfileImageRoute, MultipartFile newProfileBackgroundImageRoute, String newUsername, String newBio) {
+    public void editPerson(int id, MultipartFile newProfileImageRoute, MultipartFile newProfileBackgroundImageRoute, String newUsername, String newBio) {
         if (personRepository.findById(Long.parseLong(String.valueOf(id))).isPresent()) {
             Person personToEdit = personRepository.findById(Long.parseLong(String.valueOf(id))).get();
 
@@ -61,11 +61,9 @@ public class PersonService implements UserDetailsService {
 
             personRepository.save(personToEdit);
         }
-
-        return "error";
     }
 
-    public String followPerson(String followedId, String followerId) {
+    public void followPerson(String followedId, String followerId) {
         if (personRepository.findById(Long.parseLong(followedId)).isPresent() && personRepository.findById(Long.parseLong(followerId)).isPresent()) {
             Person followedPerson = personRepository.findById(Long.parseLong(followedId)).get();
             Person followerPerson = personRepository.findById(Long.parseLong(followerId)).get();
@@ -78,13 +76,9 @@ public class PersonService implements UserDetailsService {
                         .build();
 
                 followRepository.save(follow);
-
-                return "success";
             }
 
-            return "already followed";
+            throw new IllegalArgumentException("Already followed");
         }
-
-        return "error";
     }
 }
