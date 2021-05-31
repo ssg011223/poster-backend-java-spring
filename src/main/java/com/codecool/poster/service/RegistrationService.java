@@ -8,8 +8,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-
 @Service
 @AllArgsConstructor
 public class RegistrationService {
@@ -17,13 +15,12 @@ public class RegistrationService {
     private final PersonRepository personRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
-    public String register(Person person) {
+    public void register(Person person) {
         if (person.getUsername() == null || person.getEmail() == null || person.getBirthDate() == null || person.getPassword() == null)
-            return "Registration failed!";
+            throw new IllegalArgumentException("Person details can not be null!");
 
-        if (person.getBirthDate().isAfter(LocalDate.from(LocalDate.now()))) {
-            return "Birth date is not valid";
-        }
+        if (person.getBirthDate().isAfter(LocalDate.from(LocalDate.now())))
+            throw new IllegalArgumentException("Date can not be after today!");
 
         boolean emailExists = personRepository
                 .findByEmail(person.getEmail())
@@ -34,14 +31,13 @@ public class RegistrationService {
                 .isPresent();
 
         if (emailExists || usernameExists)
-            return "Email or username already taken!";
+            throw new IllegalArgumentException("Email or username already taken!");
 
         String encodedPassword = bCryptPasswordEncoder.encode(person.getPassword());
 
         person.setPassword(encodedPassword);
+        person.setUserRole(UserRole.USER);
 
         personRepository.save(person);
-
-        return "success";
     }
 }
