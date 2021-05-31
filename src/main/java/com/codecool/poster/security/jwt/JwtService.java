@@ -2,12 +2,16 @@ package com.codecool.poster.security.jwt;
 
 import io.jsonwebtoken.*;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Base64;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 
 @Component
@@ -58,5 +62,16 @@ public class JwtService {
             return bearerToken.substring(7);
         }
         return null;
+    }
+
+    public Authentication parseUserFromTokenInfo(String token) {
+        Claims body = Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody();
+        String username = body.getSubject();
+        List<String> roles = (List<String>) body.get(rolesFieldName);
+        List<SimpleGrantedAuthority> authorities = new LinkedList<>();
+        for (String role: roles) {
+            authorities.add(new SimpleGrantedAuthority(role));
+        }
+        return new UsernamePasswordAuthenticationToken(username, "", authorities);
     }
 }
