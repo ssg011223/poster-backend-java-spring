@@ -4,7 +4,6 @@ import com.codecool.poster.model.*;
 import com.codecool.poster.service.MediaService;
 import com.codecool.poster.service.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -12,10 +11,10 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.UUID;
 
 @RestController
 @RequestMapping("/posts")
+@CrossOrigin(origins = "*")
 public class PostController {
     @Autowired
     private PostService postService;
@@ -30,7 +29,6 @@ public class PostController {
             Collection<Media> media = mediaService.findAllByPostId(post.getId());
             postsToSend.add(new SendPost(post, media));
         }
-        response.addHeader("Access-Control-Allow-Origin", "*");
         return postsToSend;
     }
 

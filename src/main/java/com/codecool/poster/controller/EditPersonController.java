@@ -8,12 +8,13 @@ import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @AllArgsConstructor
+@CrossOrigin("*")
 @RequestMapping(path = "/settings/profile")
 public class EditPersonController {
 
     private final PersonService personService;
 
-    @PostMapping
+    @PutMapping
     public ResponseEntity<String> editPerson(@RequestParam int id,
                                      @RequestParam(required = false) MultipartFile newProfileImageRoute,
                                      @RequestParam(required = false) MultipartFile newProfileBackgroundImageRoute,

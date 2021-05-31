@@ -14,8 +14,6 @@ public class RegistrationController {
     private final RegistrationService registrationService;
 
     @PostMapping
-    public ResponseEntity<String> register(@RequestBody Person person) {
-        registrationService.register(person);
-        return ResponseEntity.ok("User Registered");
-    }
+    @CrossOrigin(origins = "*")
+    public ResponseEntity<String> register(@RequestBody Person person) { return registrationService.register(person); }
 }

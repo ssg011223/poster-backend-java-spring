@@ -78,7 +78,9 @@ public class PersonService implements UserDetailsService {
                 followRepository.save(follow);
             }
 
-            throw new IllegalArgumentException("Already followed");
+            throw new IllegalArgumentException("User already followed");
         }
+
+        throw new UsernameNotFoundException("Username not found!");
     }
 }
