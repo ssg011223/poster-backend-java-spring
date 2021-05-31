@@ -7,11 +7,9 @@ import lombok.AllArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Service
@@ -19,41 +17,12 @@ import java.time.LocalDateTime;
 public class PersonService implements UserDetailsService {
 
     private final PersonRepository personRepository;
-    private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final MediaService mediaService;
     private final FollowRepository followRepository;
 
     @Override
     public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
         return null;
-    }
-
-    public String signUpUser(Person person) {
-        if (person.getUsername() == null || person.getEmail() == null || person.getBirthDate() == null || person.getPassword() == null)
-            return "Registration failed!";
-
-        if (person.getBirthDate().isAfter(LocalDate.from(LocalDate.now()))) {
-            return "Birth date is not valid";
-        }
-
-        boolean emailExists = personRepository
-                .findByEmail(person.getEmail())
-                .isPresent();
-
-        boolean usernameExists = personRepository
-                .findByUsername(person.getUsername())
-                .isPresent();
-
-        if (emailExists || usernameExists)
-            return "Email or username already taken!";
-
-        String encodedPassword = bCryptPasswordEncoder.encode(person.getPassword());
-
-        person.setPassword(encodedPassword);
-
-        personRepository.save(person);
-
-        return "success";
     }
 
     public String editPerson(int id, MultipartFile newProfileImageRoute, MultipartFile newProfileBackgroundImageRoute, String newUsername, String newBio) {
