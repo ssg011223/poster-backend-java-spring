@@ -10,10 +10,12 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Component
 public class ImpUserDetails implements UserDetailsService {
     @Autowired
     private PersonRepository personRepository;
@@ -24,9 +26,9 @@ public class ImpUserDetails implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         Person person = personRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("Username: " + username + " not found"));
-        List<GrantedAuthority> roles = roleRepository.findAllByPersonId(person).stream()
+        List<GrantedAuthority> roles = roleRepository.findAllByPersonId(person.getId()).stream()
                 .map(p -> new SimpleGrantedAuthority(p.getUserRole().toString())).collect(Collectors.toList());
 
-        return new User(person.getUsername(), person.getPassword(), roles);
+        return new CustomUser(person.getId(), person.getUsername(), person.getPassword(), roles);
     }
 }
