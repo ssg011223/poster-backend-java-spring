@@ -2,6 +2,7 @@ package com.codecool.poster.controller;
 
 import com.codecool.poster.service.PersonService;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -11,9 +12,10 @@ public class PersonController {
 
     private final PersonService personService;
 
-    @PostMapping
-    public String follow(@PathVariable("followedId") String followedId,
-                       @RequestParam String followerId) {
-        return personService.followPerson(followedId, followerId);
+    @PostMapping()
+    @ResponseStatus(value = HttpStatus.BAD_REQUEST, reason = "")
+    public void follow(@PathVariable("followedId") String followedId,
+                                        @RequestParam String followerId) {
+        personService.followPerson(followedId, followerId);
     }
 }
