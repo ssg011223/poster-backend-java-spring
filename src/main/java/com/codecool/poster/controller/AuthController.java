@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.HashMap;
 import java.util.List;
@@ -57,5 +58,17 @@ public class AuthController {
         } catch (AuthenticationException e) {
             throw new BadCredentialsException("Invalid username/password");
         }
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity logout(HttpServletRequest req, HttpServletResponse res) {
+        Cookie cookie = new  Cookie("token", null);
+        cookie.setMaxAge(0);
+        cookie.setHttpOnly(true);
+        cookie.setPath("/");
+
+        res.addCookie(cookie);
+
+        return ResponseEntity.ok().build();
     }
 }
