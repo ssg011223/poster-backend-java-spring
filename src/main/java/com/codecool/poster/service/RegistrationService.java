@@ -1,7 +1,7 @@
 package com.codecool.poster.service;
 
 import com.codecool.poster.model.Person;
-import com.codecool.poster.model.UserRole;
+import com.codecool.poster.model.UserRoleEnum;
 import com.codecool.poster.repository.PersonRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -36,7 +36,7 @@ public class RegistrationService {
         String encodedPassword = bCryptPasswordEncoder.encode(person.getPassword());
 
         person.setPassword(encodedPassword);
-        person.setUserRole(UserRole.USER);
+        person.setUserRole(UserRoleEnum.ROLE_USER);
 
         personRepository.save(person);
     }
