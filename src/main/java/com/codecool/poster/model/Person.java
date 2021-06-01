@@ -21,7 +21,7 @@ import java.util.Collections;
 @AllArgsConstructor
 @Builder
 @Table(name = "person")
-public class Person implements UserDetails {
+public class Person {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -47,30 +47,4 @@ public class Person implements UserDetails {
     private long profileImageId;
 
     private long profileBackgroundImageId;
-
-    @Enumerated(EnumType.STRING)
-    private UserRole userRole;
-
-    private Boolean locked = false;
-
-    private Boolean enabled = false;
-
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        SimpleGrantedAuthority authority = new SimpleGrantedAuthority(userRole.name());
-        return Collections.singletonList(authority);
-    }
-
-    @Override
-    public boolean isAccountNonExpired() { return true; }
-
-    @Override
-    public boolean isAccountNonLocked() { return true; }
-
-    @Override
-    public boolean isCredentialsNonExpired() { return true; }
-
-    @Override
-    public boolean isEnabled() { return true; }
-
 }
