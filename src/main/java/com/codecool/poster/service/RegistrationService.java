@@ -11,6 +11,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -42,6 +43,8 @@ public class RegistrationService {
         String encodedPassword = bCryptPasswordEncoder.encode(person.getPassword());
 
         person.setPassword(encodedPassword);
+
+        person.setRegistrationDate(LocalDateTime.now());
 
         UserRole role = new UserRole(person, UserRoleEnum.ROLE_USER);
 
