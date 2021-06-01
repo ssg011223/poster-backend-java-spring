@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
+import java.util.Collection;
 
 @Service
 @AllArgsConstructor
@@ -83,4 +84,6 @@ public class PersonService implements UserDetailsService {
 
         throw new UsernameNotFoundException("Username not found!");
     }
+
+    public Collection<Person> searchPeople(String searchPhrase) { return personRepository.findAllByUsernameLike("%" + searchPhrase + "%"); }
 }
