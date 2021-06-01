@@ -44,7 +44,7 @@ public class Person {
 
     private int followedCount;
 
-    private long profileImageId;
+    private Long profileImageId;
 
-    private long profileBackgroundImageId;
+    private Long profileBackgroundImageId;
 }
