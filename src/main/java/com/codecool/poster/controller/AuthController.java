@@ -1,10 +1,6 @@
 package com.codecool.poster.controller;
 
-import com.codecool.poster.model.Person;
 import com.codecool.poster.model.UserCredentials;
-import com.codecool.poster.model.UserRole;
-import com.codecool.poster.repository.PersonRepository;
-import com.codecool.poster.repository.RoleRepository;
 import com.codecool.poster.security.CustomUser;
 import com.codecool.poster.security.jwt.JwtService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,10 +16,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletResponse;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RestController
@@ -35,7 +32,7 @@ public class AuthController {
     private AuthenticationManager authenticationManager;
 
     @PostMapping("/login")
-    public ResponseEntity login(@RequestBody UserCredentials data) {
+    public ResponseEntity login(@RequestBody UserCredentials data, HttpServletResponse res) {
         try {
             String username = data.getUsername();
             Authentication auth = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, data.getPassword()));
@@ -48,9 +45,14 @@ public class AuthController {
             String token = jwtService.createToken(user.getId(), username, roles);
 
             Map<Object, Object> model = new HashMap<>();
-            model.put("username", username);
-            model.put("roles", roles);
             model.put("token", token);
+
+            Cookie cookie = new  Cookie("token", token);
+            cookie.setMaxAge(7 * 24 * 60 * 60);
+            cookie.setHttpOnly(true);
+            cookie.setPath("/");
+
+            res.addCookie(cookie);
             return ResponseEntity.ok(model);
         } catch (AuthenticationException e) {
             throw new BadCredentialsException("Invalid username/password");
