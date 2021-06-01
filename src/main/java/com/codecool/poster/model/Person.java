@@ -14,6 +14,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 
 @Entity
 @Data
@@ -33,6 +34,9 @@ public class Person {
 
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "person", cascade = CascadeType.ALL)
+    private List<UserRole> roles;
 
     private String description;
 

@@ -18,6 +18,7 @@ import javax.persistence.*;
 public class UserRole {
     @Id
     @ManyToOne
+    @JoinColumn(name = "person_id")
     private Person person;
     @Id
     @Enumerated(value = EnumType.STRING)
