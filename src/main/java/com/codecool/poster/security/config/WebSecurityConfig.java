@@ -1,5 +1,6 @@
 package com.codecool.poster.security.config;
 
+import com.codecool.poster.security.ImpUserDetails;
 import com.codecool.poster.service.PersonService;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -16,8 +17,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
-    private final PersonService personService;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final ImpUserDetails impUserDetails;
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -43,7 +44,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         DaoAuthenticationProvider provider =
                 new DaoAuthenticationProvider();
         provider.setPasswordEncoder(bCryptPasswordEncoder);
-        provider.setUserDetailsService(personService);
+        provider.setUserDetailsService(impUserDetails);
         return provider;
     }
 }
