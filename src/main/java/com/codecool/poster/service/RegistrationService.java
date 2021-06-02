@@ -6,6 +6,7 @@ import com.codecool.poster.model.UserRoleEnum;
 import com.codecool.poster.repository.PersonRepository;
 import com.codecool.poster.repository.RoleRepository;
 import lombok.AllArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -22,12 +23,12 @@ public class RegistrationService {
     private RoleRepository roleRepository;
     private final PasswordEncoder bCryptPasswordEncoder;
 
-    public void register(Person person) {
+    public ResponseEntity<String> register(Person person) {
         if (person.getUsername() == null || person.getEmail() == null || person.getBirthDate() == null || person.getPassword() == null)
-            throw new IllegalArgumentException("Person details can not be null!");
+            return ResponseEntity.badRequest().body("User details can not be null!");
 
         if (person.getBirthDate().isAfter(LocalDate.from(LocalDate.now())))
-            throw new IllegalArgumentException("Date can not be after today!");
+            return ResponseEntity.badRequest().body("Date can not be after today!");
 
         boolean emailExists = personRepository
                 .findByEmail(person.getEmail())
@@ -38,7 +39,7 @@ public class RegistrationService {
                 .isPresent();
 
         if (emailExists || usernameExists)
-            throw new IllegalArgumentException("Email or username already taken!");
+            return ResponseEntity.badRequest().body("Email or Username already taken!");
 
         String encodedPassword = bCryptPasswordEncoder.encode(person.getPassword());
 
@@ -51,5 +52,6 @@ public class RegistrationService {
         person.setRoles(List.of(role));
 
         personRepository.save(person);
+        return ResponseEntity.ok("");
     }
 }
