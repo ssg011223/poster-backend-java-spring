@@ -21,6 +21,10 @@ public class PostService {
         return postRepository.findAll();
     }
 
+    public Collection<Post> findAllByPersonIdIn(Collection<Long> personId){
+        return postRepository.findAllByPersonIdIn(personId);
+    }
+
     public Post findById(int id) {
         return postRepository.findById(id).orElse(null);
     }
