@@ -1,9 +1,12 @@
 package com.codecool.poster.controller;
 
+import com.codecool.poster.model.Person;
 import com.codecool.poster.model.UserCredentials;
 import com.codecool.poster.security.CustomUser;
 import com.codecool.poster.security.jwt.JwtService;
+import com.codecool.poster.service.PersonService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -31,6 +34,8 @@ public class AuthController {
     private JwtService jwtService;
     @Autowired
     private AuthenticationManager authenticationManager;
+    @Autowired
+    private PersonService personService;
     private final String TOKEN_FIELD_NAME = "token";
     private final String TOKEN_BEARER = "Bearer";
     private final String TOKEN_PATH = "/";
@@ -45,6 +50,9 @@ public class AuthController {
                     .map(GrantedAuthority::getAuthority)
                     .collect(Collectors.toList());
             CustomUser user = (CustomUser) auth.getPrincipal();
+            Person person = personService.getUser(username).orElse(null);
+            if (person == null) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+            user.setId(person.getId());
 
             String token = jwtService.createToken(user.getId(), username, roles);
 
