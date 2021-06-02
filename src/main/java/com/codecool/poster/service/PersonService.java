@@ -1,17 +1,17 @@
 package com.codecool.poster.service;
 
 import com.codecool.poster.model.*;
+import com.codecool.poster.model.follow.Follow;
 import com.codecool.poster.repository.FollowRepository;
 import com.codecool.poster.repository.PersonRepository;
 import lombok.AllArgsConstructor;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 import java.util.Collection;
+import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -20,6 +20,10 @@ public class PersonService {
     private final PersonRepository personRepository;
     private final MediaService mediaService;
     private final FollowRepository followRepository;
+
+    public Optional<Person> getUser(String username) {
+        return personRepository.findByUsername(username);
+    }
 
     public void editPerson(int id, MultipartFile newProfileImageRoute, MultipartFile newProfileBackgroundImageRoute, String newUsername, String newBio) {
         if (personRepository.findById(Long.parseLong(String.valueOf(id))).isPresent()) {
