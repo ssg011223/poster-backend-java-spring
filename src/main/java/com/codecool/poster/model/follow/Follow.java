@@ -1,5 +1,6 @@
-package com.codecool.poster.model;
+package com.codecool.poster.model.follow;
 
+import com.codecool.poster.model.Person;
 import com.codecool.poster.model.key.FollowKey;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
