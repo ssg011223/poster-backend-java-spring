@@ -31,6 +31,9 @@ public class AuthController {
     private JwtService jwtService;
     @Autowired
     private AuthenticationManager authenticationManager;
+    private final String TOKEN_FIELD_NAME = "token";
+    private final String TOKEN_BEARER = "Bearer";
+    private final String TOKEN_PATH = "/";
 
     @PostMapping("/login")
     public ResponseEntity login(@RequestBody UserCredentials data, HttpServletResponse res) {
@@ -45,16 +48,13 @@ public class AuthController {
 
             String token = jwtService.createToken(user.getId(), username, roles);
 
-            Map<Object, Object> model = new HashMap<>();
-            model.put("token", token);
-
-            Cookie cookie = new  Cookie("token", token);
+            Cookie cookie = new  Cookie(TOKEN_FIELD_NAME, TOKEN_BEARER + token);
             cookie.setMaxAge(7 * 24 * 60 * 60);
             cookie.setHttpOnly(true);
-            cookie.setPath("/");
+            cookie.setPath(TOKEN_PATH);
 
             res.addCookie(cookie);
-            return ResponseEntity.ok(model);
+            return ResponseEntity.ok().build();
         } catch (AuthenticationException e) {
             throw new BadCredentialsException("Invalid username/password");
         }
@@ -62,10 +62,10 @@ public class AuthController {
 
     @PostMapping("/logout")
     public ResponseEntity logout(HttpServletRequest req, HttpServletResponse res) {
-        Cookie cookie = new  Cookie("token", null);
+        Cookie cookie = new  Cookie(TOKEN_FIELD_NAME, null);
         cookie.setMaxAge(0);
         cookie.setHttpOnly(true);
-        cookie.setPath("/");
+        cookie.setPath(TOKEN_PATH);
 
         res.addCookie(cookie);
 
