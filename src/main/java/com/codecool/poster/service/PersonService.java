@@ -15,16 +15,11 @@ import java.util.Collection;
 
 @Service
 @AllArgsConstructor
-public class PersonService implements UserDetailsService {
+public class PersonService {
 
     private final PersonRepository personRepository;
     private final MediaService mediaService;
     private final FollowRepository followRepository;
-
-    @Override
-    public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
-        return null;
-    }
 
     public void editPerson(int id, MultipartFile newProfileImageRoute, MultipartFile newProfileBackgroundImageRoute, String newUsername, String newBio) {
         if (personRepository.findById(Long.parseLong(String.valueOf(id))).isPresent()) {

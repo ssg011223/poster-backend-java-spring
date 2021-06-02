@@ -14,6 +14,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 
 @Entity
 @Data
@@ -21,7 +22,7 @@ import java.util.Collections;
 @AllArgsConstructor
 @Builder
 @Table(name = "person")
-public class Person implements UserDetails {
+public class Person {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -34,6 +35,9 @@ public class Person implements UserDetails {
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
 
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "person", cascade = CascadeType.ALL)
+    private List<UserRole> roles;
+
     private String description;
 
     private LocalDate birthDate;
@@ -44,33 +48,7 @@ public class Person implements UserDetails {
 
     private int followedCount;
 
-    private long profileImageId;
+    private Long profileImageId;
 
-    private long profileBackgroundImageId;
-
-    @Enumerated(EnumType.STRING)
-    private UserRole userRole;
-
-    private Boolean locked = false;
-
-    private Boolean enabled = false;
-
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        SimpleGrantedAuthority authority = new SimpleGrantedAuthority(userRole.name());
-        return Collections.singletonList(authority);
-    }
-
-    @Override
-    public boolean isAccountNonExpired() { return true; }
-
-    @Override
-    public boolean isAccountNonLocked() { return true; }
-
-    @Override
-    public boolean isCredentialsNonExpired() { return true; }
-
-    @Override
-    public boolean isEnabled() { return true; }
-
+    private Long profileBackgroundImageId;
 }
