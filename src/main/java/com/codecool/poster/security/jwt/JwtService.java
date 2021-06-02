@@ -6,8 +6,10 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Component;
+import org.springframework.web.util.WebUtils;
 
 import javax.annotation.PostConstruct;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Base64;
 import java.util.Date;
@@ -56,9 +58,13 @@ public class JwtService {
 
     //Might change with frontend token storage
     public String getTokenFromRequest(HttpServletRequest req) {
-        String bearerToken = req.getHeader("Authorization");
-        if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
-            return bearerToken.substring(7);
+        Cookie tokenCookie = WebUtils.getCookie(req, "token");
+        String bearerToken = null;
+        if (tokenCookie != null) {
+            bearerToken = tokenCookie.getValue();
+        }
+        if (bearerToken != null && bearerToken.startsWith("Bearer")) {
+            return bearerToken.substring(6);
         }
         return null;
     }
