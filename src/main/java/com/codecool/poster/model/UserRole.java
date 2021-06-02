@@ -1,16 +1,15 @@
 package com.codecool.poster.model;
 
 import com.codecool.poster.model.key.RoleKey;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.*;
 
 import javax.persistence.*;
 
 @Entity
 @Table(name = "auth_role")
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -19,6 +18,7 @@ public class UserRole {
     @Id
     @ManyToOne
     @JoinColumn(name = "person_id")
+    @JsonIgnore
     private Person person;
     @Id
     @Enumerated(value = EnumType.STRING)
