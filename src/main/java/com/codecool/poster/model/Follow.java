@@ -20,12 +20,12 @@ public class Follow {
 
     @Id
     @ManyToOne
-    @JoinColumn(referencedColumnName = "id")
+    @JoinColumn(name = "follower_person_id")
     private Person followerPerson;
 
     @Id
     @ManyToOne
-    @JoinColumn(referencedColumnName = "id")
+    @JoinColumn(name = "followed_person_id")
     private Person followedPerson;
 
     private LocalDateTime followDate;
