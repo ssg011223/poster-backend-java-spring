@@ -116,12 +116,4 @@ public class PersonService {
 
     public Collection<Person> searchPeople(String searchPhrase) { return personRepository.findAllByUsernameLike("%" + searchPhrase + "%"); }
 
-    public Person getPersonByUsername(String username) {
-        Optional<Person> person = personRepository.findByUsername(username);
-
-        if (person.isPresent())
-            return person.get();
-        else
-            throw new IllegalStateException("Username not found!");
-    }
 }

@@ -39,8 +39,6 @@ public class AuthController {
 
     @Autowired
     private AuthenticationManager authenticationManager;
-    @Autowired
-    private PersonService personService;
     private final String TOKEN_FIELD_NAME = "token";
     private final String TOKEN_BEARER = "Bearer";
     private final String TOKEN_PATH = "/";
@@ -56,10 +54,6 @@ public class AuthController {
                     .collect(Collectors.toList());
             CustomUser user = (CustomUser) auth.getPrincipal();
             Person person = personService.getUser(username).orElse(null);
-            if (person == null) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-            user.setId(person.getId());
-
-            Person person = personService.getPersonByUsername(username);
             if (person == null) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
             user.setId(person.getId());
 
