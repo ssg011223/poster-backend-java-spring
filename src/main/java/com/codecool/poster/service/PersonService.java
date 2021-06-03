@@ -146,4 +146,15 @@ public class PersonService {
 
         return ResponseEntity.badRequest().body("Token can not be null");
     }
+
+    public ResponseEntity getAllPeopleExpectLoggedPerson(String bearerToken) {
+        if (bearerToken != null) {
+            String token = jwtService.getTokenWithoutBearer(bearerToken);
+            long id = jwtService.parseIdFromTokenInfo(token);
+
+            return ResponseEntity.ok(personRepository.findAllExpectOnePerson(id));
+        }
+
+        return ResponseEntity.badRequest().body("Token can not be null!");
+    }
 }
