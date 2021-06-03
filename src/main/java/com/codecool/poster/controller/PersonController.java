@@ -5,7 +5,6 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 @RestController
@@ -17,8 +16,7 @@ public class PersonController {
 
     @GetMapping
     public ResponseEntity getPerson(@CookieValue("token") String token,
-                                    @PathVariable("id") String profileId,
-                                    HttpServletResponse res) {
+                                    @PathVariable("id") String profileId) {
         return personService.getPerson(profileId, token); }
 
     @PostMapping()

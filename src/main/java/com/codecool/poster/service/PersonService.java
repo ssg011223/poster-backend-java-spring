@@ -90,7 +90,10 @@ public class PersonService {
             }
 
             personRepository.save(personToEdit);
+            return ResponseEntity.ok().build();
         }
+
+        return ResponseEntity.badRequest().body("Token or Id are not valid!");
     }
 
     public void followPerson(String followedId, String followerId) {
@@ -116,4 +119,27 @@ public class PersonService {
 
     public Collection<Person> searchPeople(String searchPhrase) { return personRepository.findAllByUsernameLike("%" + searchPhrase + "%"); }
 
+    public Person getPersonByUsername(String username) {
+        Optional<Person> person = personRepository.findByUsername(username);
+
+        if (person.isPresent())
+            return person.get();
+        else
+            throw new IllegalStateException("Username not found!");
+    }
+
+    public ResponseEntity getPersonDetails(String bearerToken) {
+        if (bearerToken != null) {
+            String token = jwtService.getTokenWithoutBearer(bearerToken);
+            long id = jwtService.parseIdFromTokenInfo(token);
+            Optional<Person> person = personRepository.findById(id);
+
+            if (person.isPresent())
+                return ResponseEntity.ok(person.get());
+
+            return ResponseEntity.badRequest().body("Username not found!");
+        }
+
+        return ResponseEntity.badRequest().body("Token can not be null");
+    }
 }

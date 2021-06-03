@@ -44,8 +44,8 @@ public class RegistrationService {
         String encodedPassword = bCryptPasswordEncoder.encode(person.getPassword());
 
         person.setPassword(encodedPassword);
-
         person.setRegistrationDate(LocalDateTime.now());
+        person.setDescription("");
 
         UserRole role = new UserRole(person, UserRoleEnum.ROLE_USER);
 
