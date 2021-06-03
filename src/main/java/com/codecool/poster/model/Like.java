@@ -9,19 +9,17 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "adom")
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @IdClass(LikeKey.class)
 public class Like {
     @Id
-    @ManyToOne
-    private Person person;
+    private long postId;
     @Id
-    @ManyToOne
-    private Post post;
+    private long personId;
 
+    @Column(name = "adom_date")
     private LocalDateTime likeDate;
 }
