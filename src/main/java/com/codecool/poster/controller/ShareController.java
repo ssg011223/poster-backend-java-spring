@@ -21,7 +21,7 @@ public class ShareController {
     @DeleteMapping("/{postId}")
     public void unShare(HttpServletRequest req,
                       @PathVariable("postId") long postId) {
-
+        shareService.deleteShare(req, postId);
     }
 
 }
