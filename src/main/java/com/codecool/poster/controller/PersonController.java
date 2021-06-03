@@ -7,17 +7,21 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @AllArgsConstructor
-@RequestMapping("/profile/{id}")
+@RequestMapping("/profile")
+@CrossOrigin(origins = "*")
 public class PersonController {
 
     private final PersonService personService;
 
     @GetMapping
-    public ResponseEntity getPerson(@CookieValue("token") String token,
-                                    @PathVariable("id") String profileId) {
-        return personService.getPerson(profileId, token); }
+    public ResponseEntity getPerson(@CookieValue("token") String token) { return personService.getPersonDetails(token); }
 
-    @PostMapping()
+    @GetMapping("/{id}")
+    public ResponseEntity getPersonById(@CookieValue("token") String token,
+                                    @PathVariable("id") String profileId) {
+        return personService.getPersonById(profileId, token); }
+
+    @PostMapping("/{id}")
     public void follow(@PathVariable("id") String followedId,
                                         @RequestParam String followerId) {
         personService.followPerson(followedId, followerId);

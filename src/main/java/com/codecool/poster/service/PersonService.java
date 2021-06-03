@@ -26,7 +26,7 @@ public class PersonService {
     private final FollowRepository followRepository;
     private final JwtService jwtService;
 
-    public ResponseEntity getPerson(String id, String bearerToken) {
+    public ResponseEntity getPersonById(String id, String bearerToken) {
         long newId = Long.parseLong(String.valueOf(id));
         Optional<Person> person = personRepository.findById(newId);
         Map<Object, Object> result = new HashMap();
