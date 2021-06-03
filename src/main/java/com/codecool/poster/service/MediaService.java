@@ -4,9 +4,11 @@ import com.codecool.poster.model.Media;
 import com.codecool.poster.repository.MediaRepository;
 import lombok.AllArgsConstructor;
 import org.apache.commons.io.FilenameUtils;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.persistence.criteria.CriteriaBuilder;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -21,7 +23,7 @@ public class MediaService {
 
     public String submit(MultipartFile file) {
         String extension = FilenameUtils.getExtension(file.getOriginalFilename());
-        String route = "/home/gergo/projects/javaAdvanced/poster-backend-java-spring/src/main/resources/media/" + UUID.randomUUID() + "." + extension;
+        String route = "/poster-backend-java-spring/src/main/resources/media/" + UUID.randomUUID() + "." + extension;
         try {
             file.transferTo(new File(route));
         } catch (IOException e) {
@@ -53,6 +55,16 @@ public class MediaService {
         InputStream in = null;
         try {
             in = new FileInputStream(route);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        return in;
+    }
+
+    public InputStream getDefaultImage() {
+        InputStream in = null;
+        try {
+            in = new FileInputStream("src/main/resources/media/basic_wallaper.jpg");
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }

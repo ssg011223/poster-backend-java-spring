@@ -4,6 +4,7 @@ import com.codecool.poster.service.MediaService;
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -25,4 +26,7 @@ public class MediaController {
         InputStream in = mediaService.getImageInputStreamById(Long.parseLong(id));
         return IOUtils.toByteArray(in);
     }
+
+    @GetMapping(value = "/default-image", produces = MediaType.IMAGE_JPEG_VALUE)
+    public @ResponseBody byte[] defaultImage() throws IOException { return IOUtils.toByteArray(mediaService.getDefaultImage()); }
 }
