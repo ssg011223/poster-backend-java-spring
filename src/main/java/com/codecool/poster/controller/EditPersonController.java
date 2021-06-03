@@ -21,8 +21,8 @@ public class EditPersonController {
     @PutMapping
     public ResponseEntity editPerson(@CookieValue("token") String token,
                                      @RequestParam String id,
-                                     @RequestParam(required = false, value = "profileImageRoute") MultipartFile newProfileImageRoute,
-                                     @RequestParam(required = false, value = "profileBackgroundImageRoute") MultipartFile newProfileBackgroundImageRoute,
+                                     @RequestParam(required = false, value = "profileImageId") MultipartFile newProfileImageRoute,
+                                     @RequestParam(required = false, value = "profileBackgroundImageId") MultipartFile newProfileBackgroundImageRoute,
                                      @RequestParam(required = false, value = "username") String newUsername,
                                      @RequestParam(required = false, value = "description") String newBio) {
         return personService.editPerson(token, id, newProfileImageRoute, newProfileBackgroundImageRoute, newUsername, newBio);
