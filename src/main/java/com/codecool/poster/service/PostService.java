@@ -29,7 +29,7 @@ public class PostService {
         return postRepository.findAllByPersonIdIn(personId);
     }
 
-    public Post findById(int id) {
+    public Post findById(long id) {
         return postRepository.findById(id).orElse(null);
     }
 
