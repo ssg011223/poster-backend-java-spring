@@ -50,9 +50,13 @@ public class PersonService {
             return ResponseEntity.badRequest().body("Token can not be null");
     }
 
-    public void editPerson(int id, MultipartFile newProfileImageRoute, MultipartFile newProfileBackgroundImageRoute, String newUsername, String newBio) {
-        if (personRepository.findById(Long.parseLong(String.valueOf(id))).isPresent()) {
-            Person personToEdit = personRepository.findById(Long.parseLong(String.valueOf(id))).get();
+    public ResponseEntity editPerson(String bearerToken, String id, MultipartFile newProfileImageRoute, MultipartFile newProfileBackgroundImageRoute, String newUsername, String newBio) {
+        String token = jwtService.getTokenWithoutBearer(bearerToken);
+        long newId = Long.parseLong(String.valueOf(id));
+        Optional<Person> person = personRepository.findById(newId);
+
+        if (jwtService.parseIdFromTokenInfo(token) == newId && person.isPresent()) {
+            Person personToEdit = person.get();
 
             if (newUsername != null)
                 personToEdit.setUsername(newUsername);
@@ -85,7 +89,10 @@ public class PersonService {
             }
 
             personRepository.save(personToEdit);
+            return ResponseEntity.ok().build();
         }
+
+        return ResponseEntity.badRequest().body("Token or Id are not valid!");
     }
 
     public void followPerson(String followedId, String followerId) {
@@ -118,5 +125,20 @@ public class PersonService {
             return person.get();
         else
             throw new IllegalStateException("Username not found!");
+    }
+
+    public ResponseEntity getPersonDetails(String bearerToken) {
+        if (bearerToken != null) {
+            String token = jwtService.getTokenWithoutBearer(bearerToken);
+            long id = jwtService.parseIdFromTokenInfo(token);
+            Optional<Person> person = personRepository.findById(id);
+
+            if (person.isPresent())
+                return ResponseEntity.ok(person.get());
+
+            return ResponseEntity.badRequest().body("Username not found!");
+        }
+
+        return ResponseEntity.badRequest().body("Token can not be null");
     }
 }
