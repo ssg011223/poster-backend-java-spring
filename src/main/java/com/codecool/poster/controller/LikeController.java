@@ -18,9 +18,9 @@ public class LikeController {
         likeService.saveLike(req, postId);
     }
 
-    @DeleteMapping
+    @DeleteMapping("/{postId}")
     public void unLike(HttpServletRequest req,
-                     @RequestParam(value = "postId") long id) {
-
+                     @PathVariable(value = "postId") long postId) {
+        likeService.deleteLike(req,postId);
     }
 }
