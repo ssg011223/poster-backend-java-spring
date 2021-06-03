@@ -8,5 +8,5 @@ import java.util.Collection;
 
 @Repository
 public interface MediaRepository extends JpaRepository<Media, Long> {
-    Collection<Media> findAllByPostId(long id);
+    Collection<Media> findAllByPostIdIn(Collection<Long> id);
 }

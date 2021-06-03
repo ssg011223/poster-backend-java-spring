@@ -1,5 +1,6 @@
-package com.codecool.poster.model;
+package com.codecool.poster.model.follow;
 
+import com.codecool.poster.model.Person;
 import com.codecool.poster.model.key.FollowKey;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -20,12 +21,12 @@ public class Follow {
 
     @Id
     @ManyToOne
-    @JoinColumn(referencedColumnName = "id")
+    @JoinColumn(name = "follower_person_id")
     private Person followerPerson;
 
     @Id
     @ManyToOne
-    @JoinColumn(referencedColumnName = "id")
+    @JoinColumn(name = "followed_person_id")
     private Person followedPerson;
 
     private LocalDateTime followDate;

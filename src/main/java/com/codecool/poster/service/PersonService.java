@@ -1,6 +1,7 @@
 package com.codecool.poster.service;
 
 import com.codecool.poster.model.*;
+import com.codecool.poster.model.follow.Follow;
 import com.codecool.poster.repository.FollowRepository;
 import com.codecool.poster.repository.PersonRepository;
 import com.codecool.poster.security.jwt.JwtService;
@@ -48,6 +49,10 @@ public class PersonService {
         }
         else
             return ResponseEntity.badRequest().body("Token can not be null");
+    }
+
+    public Optional<Person> getUser(String username) {
+        return personRepository.findByUsername(username);
     }
 
     public void editPerson(int id, MultipartFile newProfileImageRoute, MultipartFile newProfileBackgroundImageRoute, String newUsername, String newBio) {
