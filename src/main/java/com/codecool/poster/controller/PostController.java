@@ -95,7 +95,7 @@ public class PostController {
                     case "image/jpeg":
                         hasImage = true;
                         break;
-                    case "image/jng":
+                    case "image/jpg":
                         hasImage = true;
                         break;
                     case "video/mp4":
