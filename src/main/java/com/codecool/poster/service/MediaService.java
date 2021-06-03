@@ -2,10 +2,8 @@ package com.codecool.poster.service;
 
 import com.codecool.poster.model.Media;
 import com.codecool.poster.repository.MediaRepository;
-import com.codecool.poster.repository.PersonMediaRepository;
 import lombok.AllArgsConstructor;
 import org.apache.commons.io.FilenameUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -44,8 +42,8 @@ public class MediaService {
         mediaRepository.saveAll(media);
     }
 
-    public Collection<Media> findAllByPostId(long id) {
-        return mediaRepository.findAllByPostId(id);
+    public Collection<Media> findAllByPostIdIn(Collection<Long> id) {
+        return mediaRepository.findAllByPostIdIn(id);
     }
 
     public InputStream getImageInputStreamById(long id) {

@@ -53,8 +53,7 @@ public class AuthController {
                     .map(GrantedAuthority::getAuthority)
                     .collect(Collectors.toList());
             CustomUser user = (CustomUser) auth.getPrincipal();
-
-            Person person = personService.getPersonByUsername(username);
+            Person person = personService.getUser(username).orElse(null);
             if (person == null) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
             user.setId(person.getId());
 

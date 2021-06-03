@@ -1,16 +1,23 @@
 package com.codecool.poster.controller;
 
 import com.codecool.poster.model.*;
+import com.codecool.poster.model.follow.FollowWithFollowed;
+import com.codecool.poster.model.post.Post;
+import com.codecool.poster.model.post.SendPost;
+import com.codecool.poster.repository.FollowRepository;
+import com.codecool.poster.security.jwt.JwtService;
 import com.codecool.poster.service.MediaService;
 import com.codecool.poster.service.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/posts")
@@ -20,16 +27,33 @@ public class PostController {
     private PostService postService;
     @Autowired
     private MediaService mediaService;
+    @Autowired
+    private JwtService jwtService;
+    @Autowired
+    private FollowRepository followRepository;
 
-    @GetMapping()
-    public Collection<SendPost> getAllPosts(HttpServletResponse response) {
-        Collection<SendPost> postsToSend = new ArrayList<>();
-        Collection<Post> posts = postService.findAll();
-        for (Post post: posts) {
-            Collection<Media> media = mediaService.findAllByPostId(post.getId());
-            postsToSend.add(new SendPost(post, media));
+
+    @GetMapping
+    public ResponseEntity getAllPostsPersonalized(HttpServletRequest req, HttpServletResponse res) {
+        String token = jwtService.getTokenFromRequest(req);
+        if (token == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
-        return postsToSend;
+
+        long id = jwtService.parseIdFromTokenInfo(token);
+        List<FollowWithFollowed> follows = followRepository.findAllByFollowerPersonId(id);
+        Collection<Post> posts = postService.findAllByPersonIdIn(follows
+                .stream()
+                .map(FollowWithFollowed::getFollowedPerson)
+                .map(Person::getId)
+                .collect(Collectors.toList()));
+
+        Collection<SendPost> mediaPosts = postService.getPostsWithMedia(posts);
+
+        Map<Object, Object> postsMap = new HashMap<>();
+        postsMap.put("posts", mediaPosts);
+
+        return ResponseEntity.ok(postsMap);
     }
 
     @GetMapping("/{id}")
@@ -38,9 +62,12 @@ public class PostController {
     }
 
     @PostMapping(value = "/add")
-    public boolean savePost(@RequestParam String message,
-                            @RequestParam int person_id,
+    public boolean savePost(HttpServletRequest req,
+                            @RequestParam String message,
                             @RequestParam(value = "files", required = false) MultipartFile[] files) {
+
+        String token = jwtService.getTokenFromRequest(req);
+        long personId = jwtService.parseIdFromTokenInfo(token);
 
         boolean hasImage = false;
         boolean hasVideo = false;
@@ -49,7 +76,7 @@ public class PostController {
                 .builder()
                 .message(message)
                 .person(Person.builder()
-                        .id(person_id)
+                        .id(personId)
                         .build());
 
         Post finalPost = postBuilder.build();

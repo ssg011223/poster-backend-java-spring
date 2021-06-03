@@ -1,6 +1,7 @@
 package com.codecool.poster.service;
 
 import com.codecool.poster.model.*;
+import com.codecool.poster.model.follow.Follow;
 import com.codecool.poster.repository.FollowRepository;
 import com.codecool.poster.repository.PersonRepository;
 import com.codecool.poster.security.jwt.JwtService;
@@ -50,13 +51,13 @@ public class PersonService {
             return ResponseEntity.badRequest().body("Token can not be null");
     }
 
-    public ResponseEntity editPerson(String bearerToken, String id, MultipartFile newProfileImageRoute, MultipartFile newProfileBackgroundImageRoute, String newUsername, String newBio) {
-        String token = jwtService.getTokenWithoutBearer(bearerToken);
-        long newId = Long.parseLong(String.valueOf(id));
-        Optional<Person> person = personRepository.findById(newId);
+    public Optional<Person> getUser(String username) {
+        return personRepository.findByUsername(username);
+    }
 
-        if (jwtService.parseIdFromTokenInfo(token) == newId && person.isPresent()) {
-            Person personToEdit = person.get();
+    public void editPerson(int id, MultipartFile newProfileImageRoute, MultipartFile newProfileBackgroundImageRoute, String newUsername, String newBio) {
+        if (personRepository.findById(Long.parseLong(String.valueOf(id))).isPresent()) {
+            Person personToEdit = personRepository.findById(Long.parseLong(String.valueOf(id))).get();
 
             if (newUsername != null)
                 personToEdit.setUsername(newUsername);

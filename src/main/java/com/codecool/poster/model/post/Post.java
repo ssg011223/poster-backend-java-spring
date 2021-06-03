@@ -1,5 +1,6 @@
-package com.codecool.poster.model;
+package com.codecool.poster.model.post;
 
+import com.codecool.poster.model.Person;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

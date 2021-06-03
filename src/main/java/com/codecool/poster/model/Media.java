@@ -1,5 +1,6 @@
 package com.codecool.poster.model;
 
+import com.codecool.poster.model.post.Post;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
