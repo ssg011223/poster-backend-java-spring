@@ -1,8 +1,9 @@
 package com.codecool.poster.controller;
 
 import com.codecool.poster.model.*;
-import com.codecool.poster.model.follow.Follow;
 import com.codecool.poster.model.follow.FollowWithFollowed;
+import com.codecool.poster.model.post.Post;
+import com.codecool.poster.model.post.SendPost;
 import com.codecool.poster.repository.FollowRepository;
 import com.codecool.poster.security.jwt.JwtService;
 import com.codecool.poster.service.MediaService;
@@ -47,8 +48,10 @@ public class PostController {
                 .map(Person::getId)
                 .collect(Collectors.toList()));
 
+        Collection<SendPost> mediaPosts = postService.getPostsWithMedia(posts);
+
         Map<Object, Object> postsMap = new HashMap<>();
-        postsMap.put("posts", posts);
+        postsMap.put("posts", mediaPosts);
 
         return ResponseEntity.ok(postsMap);
     }
