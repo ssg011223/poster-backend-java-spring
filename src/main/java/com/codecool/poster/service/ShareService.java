@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
+import java.util.Collection;
 
 @Service
 public class ShareService {
@@ -28,5 +29,9 @@ public class ShareService {
         String token = jwtService.getTokenFromRequest(req);
         long personId = jwtService.parseIdFromTokenInfo(token);
         shareRepository.deleteById(new ShareKey(postId, personId));
+    }
+
+    public Collection<Share> findAllByPersonIdIn(Collection<Long> postIds) {
+        return shareRepository.findAllByPostIdIn(postIds);
     }
 }

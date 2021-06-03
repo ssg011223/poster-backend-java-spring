@@ -39,4 +39,10 @@ public class Post {
 
     private int imageCount;
 
+    @Transient
+    private boolean isLiked;
+
+    @Transient
+    private boolean isShared;
+
 }

@@ -48,7 +48,9 @@ public class PostController {
                 .map(Person::getId)
                 .collect(Collectors.toList()));
 
-        Collection<SendPost> mediaPosts = postService.getPostsWithMedia(posts);
+        Collection<Post> interactionPosts = postService.getPostsWithInteractions(posts);
+
+        Collection<SendPost> mediaPosts = postService.getPostsWithMedia(interactionPosts);
 
         Map<Object, Object> postsMap = new HashMap<>();
         postsMap.put("posts", mediaPosts);

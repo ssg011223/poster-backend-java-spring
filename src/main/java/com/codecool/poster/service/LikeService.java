@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
+import java.util.Collection;
 
 @Service
 public class LikeService {
@@ -28,5 +29,9 @@ public class LikeService {
         String token = jwtService.getTokenFromRequest(req);
         long personId = jwtService.parseIdFromTokenInfo(token);
         likeRepository.deleteById(new LikeKey(personId, postId));
+    }
+
+    public Collection<Like> findAllByPostIdIn(Collection<Long> postIds) {
+        return likeRepository.findAllByPostIdIn(postIds);
     }
 }
