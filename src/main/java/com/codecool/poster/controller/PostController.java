@@ -62,9 +62,12 @@ public class PostController {
     }
 
     @PostMapping(value = "/add")
-    public boolean savePost(@RequestParam String message,
-                            @RequestParam int person_id,
+    public boolean savePost(HttpServletRequest req,
+                            @RequestParam String message,
                             @RequestParam(value = "files", required = false) MultipartFile[] files) {
+
+        String token = jwtService.getTokenFromRequest(req);
+        long personId = jwtService.parseIdFromTokenInfo(token);
 
         boolean hasImage = false;
         boolean hasVideo = false;
@@ -73,7 +76,7 @@ public class PostController {
                 .builder()
                 .message(message)
                 .person(Person.builder()
-                        .id(person_id)
+                        .id(personId)
                         .build());
 
         Post finalPost = postBuilder.build();
