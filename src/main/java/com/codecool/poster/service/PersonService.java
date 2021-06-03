@@ -3,6 +3,7 @@ package com.codecool.poster.service;
 import com.codecool.poster.model.*;
 import com.codecool.poster.model.follow.Follow;
 import com.codecool.poster.repository.FollowRepository;
+import com.codecool.poster.repository.PersonMediaRepository;
 import com.codecool.poster.repository.PersonRepository;
 import com.codecool.poster.security.jwt.JwtService;
 import lombok.AllArgsConstructor;
@@ -23,10 +24,11 @@ public class PersonService {
 
     private final PersonRepository personRepository;
     private final MediaService mediaService;
+    private final PersonMediaRepository personMediaRepository;
     private final FollowRepository followRepository;
     private final JwtService jwtService;
 
-    public ResponseEntity getPerson(String id, String bearerToken) {
+    public ResponseEntity getPersonById(String id, String bearerToken) {
         long newId = Long.parseLong(String.valueOf(id));
         Optional<Person> person = personRepository.findById(newId);
         Map<Object, Object> result = new HashMap();
@@ -55,7 +57,7 @@ public class PersonService {
         return personRepository.findByUsername(username);
     }
 
-    public ResponseEntity editPerson(String bearerToken, String id, MultipartFile newProfileImageRoute, MultipartFile newProfileBackgroundImageRoute, String newUsername, String newBio) {
+    public ResponseEntity editPerson(String bearerToken, String id, MultipartFile newProfileImage, MultipartFile newProfileBackgroundImage, String newUsername, String newBio) {
         String token = jwtService.getTokenWithoutBearer(bearerToken);
         long newId = Long.parseLong(String.valueOf(id));
         Optional<Person> person = personRepository.findById(newId);
@@ -69,8 +71,8 @@ public class PersonService {
             if (newBio != null)
                 personToEdit.setDescription(newBio);
 
-            if (newProfileImageRoute != null) {
-                String route = mediaService.submit(newProfileImageRoute);
+            if (newProfileImage != null) {
+                String route = mediaService.submit(newProfileImage);
 
                 PersonMedia newImage = PersonMedia.builder()
                         .person(personToEdit)
@@ -78,11 +80,12 @@ public class PersonService {
                         .mediaType(MediaTypeEnum.IMAGE)
                         .build();
 
+                personMediaRepository.save(newImage);
                 personToEdit.setProfileImageId(newImage.getId());
             }
 
-            if (newProfileBackgroundImageRoute != null) {
-                String route = mediaService.submit(newProfileBackgroundImageRoute);
+            if (newProfileBackgroundImage != null) {
+                String route = mediaService.submit(newProfileBackgroundImage);
 
                 PersonMedia newBackgroundImage = PersonMedia.builder()
                         .person(personToEdit)
@@ -90,6 +93,7 @@ public class PersonService {
                         .mediaType(MediaTypeEnum.IMAGE)
                         .build();
 
+                personMediaRepository.save(newBackgroundImage);
                 personToEdit.setProfileBackgroundImageId(newBackgroundImage.getId());
             }
 
@@ -145,5 +149,16 @@ public class PersonService {
         }
 
         return ResponseEntity.badRequest().body("Token can not be null");
+    }
+
+    public ResponseEntity getAllPeopleExpectLoggedPerson(String bearerToken) {
+        if (bearerToken != null) {
+            String token = jwtService.getTokenWithoutBearer(bearerToken);
+            long id = jwtService.parseIdFromTokenInfo(token);
+
+            return ResponseEntity.ok(personRepository.findAllExpectOnePerson(id));
+        }
+
+        return ResponseEntity.badRequest().body("Token can not be null!");
     }
 }
