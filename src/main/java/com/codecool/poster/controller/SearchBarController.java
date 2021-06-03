@@ -9,12 +9,12 @@ import java.util.Collection;
 
 @RestController
 @AllArgsConstructor
-@RequestMapping(path = "search")
+@RequestMapping(path = "/search")
 public class SearchBarController {
 
     private final PersonService personService;
 
     @PostMapping
     @CrossOrigin(origins = "*")
-    public Collection<Person> searchPeople(@RequestBody String searchPhrase) { return personService.searchPeople(searchPhrase); }
+    public Collection<Person> searchPeople(@RequestParam String searchPhrase) { return personService.searchPeople(searchPhrase); }
 }
