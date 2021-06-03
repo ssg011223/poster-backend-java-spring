@@ -20,8 +20,6 @@ public class LikeService {
 
     public void saveLike(HttpServletRequest req, long postId) {
         long id = jwtService.parseIdFromTokenInfo(jwtService.getTokenFromRequest(req));
-        Person person = Person.builder().id(id).build();
-        Post post = Post.builder().id(postId).build();
         Like like = new Like(postId, id, LocalDateTime.now());
         likeRepository.save(like);
     }
