@@ -55,9 +55,13 @@ public class PersonService {
         return personRepository.findByUsername(username);
     }
 
-    public void editPerson(int id, MultipartFile newProfileImageRoute, MultipartFile newProfileBackgroundImageRoute, String newUsername, String newBio) {
-        if (personRepository.findById(Long.parseLong(String.valueOf(id))).isPresent()) {
-            Person personToEdit = personRepository.findById(Long.parseLong(String.valueOf(id))).get();
+    public ResponseEntity editPerson(String bearerToken, String id, MultipartFile newProfileImageRoute, MultipartFile newProfileBackgroundImageRoute, String newUsername, String newBio) {
+        String token = jwtService.getTokenWithoutBearer(bearerToken);
+        long newId = Long.parseLong(String.valueOf(id));
+        Optional<Person> person = personRepository.findById(newId);
+
+        if (jwtService.parseIdFromTokenInfo(token) == newId && person.isPresent()) {
+            Person personToEdit = person.get();
 
             if (newUsername != null)
                 personToEdit.setUsername(newUsername);
