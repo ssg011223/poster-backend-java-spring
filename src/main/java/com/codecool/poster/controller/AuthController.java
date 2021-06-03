@@ -30,8 +30,13 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/auth")
 public class AuthController {
+
     @Autowired
     private JwtService jwtService;
+
+    @Autowired
+    private PersonService personService;
+
     @Autowired
     private AuthenticationManager authenticationManager;
     @Autowired
@@ -51,6 +56,10 @@ public class AuthController {
                     .collect(Collectors.toList());
             CustomUser user = (CustomUser) auth.getPrincipal();
             Person person = personService.getUser(username).orElse(null);
+            if (person == null) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+            user.setId(person.getId());
+
+            Person person = personService.getPersonByUsername(username);
             if (person == null) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
             user.setId(person.getId());
 

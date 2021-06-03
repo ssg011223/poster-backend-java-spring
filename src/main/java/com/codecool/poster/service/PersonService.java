@@ -4,13 +4,17 @@ import com.codecool.poster.model.*;
 import com.codecool.poster.model.follow.Follow;
 import com.codecool.poster.repository.FollowRepository;
 import com.codecool.poster.repository.PersonRepository;
+import com.codecool.poster.security.jwt.JwtService;
 import lombok.AllArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -20,6 +24,32 @@ public class PersonService {
     private final PersonRepository personRepository;
     private final MediaService mediaService;
     private final FollowRepository followRepository;
+    private final JwtService jwtService;
+
+    public ResponseEntity getPerson(String id, String bearerToken) {
+        long newId = Long.parseLong(String.valueOf(id));
+        Optional<Person> person = personRepository.findById(newId);
+        Map<Object, Object> result = new HashMap();
+
+        if (bearerToken != null) {
+            String token = jwtService.getTokenWithoutBearer(bearerToken);
+
+            if (jwtService.parseIdFromTokenInfo(token) == newId && person.isPresent()) {
+                result.put("person", person.get());
+                result.put("isLoggedPerson", true);
+                return ResponseEntity.ok(result);
+            }
+            else if (person.isPresent()) {
+                result.put("person", person.get());
+                result.put("isLoggedPerson", false);
+                return ResponseEntity.ok(result);
+            }
+
+            return ResponseEntity.badRequest().body("Username not found!");
+        }
+        else
+            return ResponseEntity.badRequest().body("Token can not be null");
+    }
 
     public Optional<Person> getUser(String username) {
         return personRepository.findByUsername(username);
@@ -85,4 +115,13 @@ public class PersonService {
     }
 
     public Collection<Person> searchPeople(String searchPhrase) { return personRepository.findAllByUsernameLike("%" + searchPhrase + "%"); }
+
+    public Person getPersonByUsername(String username) {
+        Optional<Person> person = personRepository.findByUsername(username);
+
+        if (person.isPresent())
+            return person.get();
+        else
+            throw new IllegalStateException("Username not found!");
+    }
 }

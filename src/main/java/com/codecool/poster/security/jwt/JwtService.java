@@ -60,13 +60,10 @@ public class JwtService {
     public String getTokenFromRequest(HttpServletRequest req) {
         Cookie tokenCookie = WebUtils.getCookie(req, "token");
         String bearerToken = null;
-        if (tokenCookie != null) {
+        if (tokenCookie != null)
             bearerToken = tokenCookie.getValue();
-        }
-        if (bearerToken != null && bearerToken.startsWith("Bearer")) {
-            return bearerToken.substring(6);
-        }
-        return null;
+
+        return getTokenWithoutBearer(bearerToken);
     }
 
     public Authentication parseUserFromTokenInfo(String token) {
@@ -83,5 +80,12 @@ public class JwtService {
     public long parseIdFromTokenInfo(String token) {
         Claims body = Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody();
         return Long.parseLong(body.getId());
+    }
+
+    public String getTokenWithoutBearer(String bearerToken) {
+        if (bearerToken != null && bearerToken.startsWith("Bearer"))
+            return bearerToken.substring(6);
+
+        return null;
     }
 }
