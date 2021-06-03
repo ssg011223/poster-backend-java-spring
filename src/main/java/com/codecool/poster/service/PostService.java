@@ -1,6 +1,8 @@
 package com.codecool.poster.service;
 
+import com.codecool.poster.model.Like;
 import com.codecool.poster.model.Media;
+import com.codecool.poster.model.Share;
 import com.codecool.poster.model.post.Post;
 import com.codecool.poster.model.post.SendPost;
 import com.codecool.poster.repository.PostRepository;
@@ -19,6 +21,10 @@ public class PostService {
     private PostRepository postRepository;
     @Autowired
     private MediaService mediaService;
+    @Autowired
+    private LikeService likeService;
+    @Autowired
+    private ShareService shareService;
     private final int MAX_POST_MESSAGE_LENGTH = 250;
     
     public Collection<Post> findAll() {
@@ -29,7 +35,7 @@ public class PostService {
         return postRepository.findAllByPersonIdIn(personId);
     }
 
-    public Post findById(int id) {
+    public Post findById(long id) {
         return postRepository.findById(id).orElse(null);
     }
 
@@ -49,6 +55,26 @@ public class PostService {
         for (Post post: posts) {
             Collection<Media> tempMedia = media.stream().filter(m -> m.getPost().equals(post)).collect(Collectors.toList());
             result.add(new SendPost(post, tempMedia));
+        }
+
+        return result;
+    }
+
+    public Collection<Post> getPostsWithInteractions(Collection<Post> posts) {
+        Collection<Long> postIds = posts.stream().map(Post::getId).collect(Collectors.toList());
+        Collection<Like> likes = likeService.findAllByPostIdIn(postIds);
+        Collection<Share> shares = shareService.findAllByPersonIdIn(postIds);
+
+        Collection<Long> likePostIds = likes.stream().map(Like::getPostId).collect(Collectors.toList());
+        Collection<Long> sharePostIds = shares.stream().map(Share::getPostId).collect(Collectors.toList());
+
+        Collection<Post> result = new ArrayList<>();
+
+        for (Post post: posts) {
+            long id = post.getId();
+            post.setLiked(likePostIds.contains(id));
+            post.setShared(sharePostIds.contains(id));
+            result.add(post);
         }
 
         return result;
