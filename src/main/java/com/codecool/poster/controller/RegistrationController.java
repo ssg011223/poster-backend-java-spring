@@ -14,6 +14,6 @@ public class RegistrationController {
     private final RegistrationService registrationService;
 
     @PostMapping
-    @CrossOrigin(origins = "*")
+    @CrossOrigin(origins = {"${cross.origin.port.number}"})
     public ResponseEntity<String> register(@RequestBody Person person) { return registrationService.register(person); }
 }
