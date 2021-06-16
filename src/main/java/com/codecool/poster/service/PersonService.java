@@ -117,6 +117,7 @@ public class PersonService {
                         .build();
 
                 followRepository.save(follow);
+                return;
             }
 
             throw new IllegalArgumentException("User already followed");
