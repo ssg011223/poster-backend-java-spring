@@ -15,6 +15,6 @@ public class SearchBarController {
     private final PersonService personService;
 
     @PostMapping
-    @CrossOrigin(origins = "*")
+    @CrossOrigin(origins = {"${cross.origin.port.number}"})
     public Collection<Person> searchPeople(@RequestParam String searchPhrase) { return personService.searchPeople(searchPhrase); }
 }

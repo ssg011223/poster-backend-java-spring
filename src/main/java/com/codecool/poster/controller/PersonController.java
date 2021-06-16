@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @AllArgsConstructor
 @RequestMapping("/profile")
-@CrossOrigin(origins = "*")
+@CrossOrigin(origins = {"${cross.origin.port.number}"})
 public class PersonController {
 
     private final PersonService personService;

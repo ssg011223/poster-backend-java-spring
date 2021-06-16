@@ -125,7 +125,7 @@ public class PersonService {
         throw new UsernameNotFoundException("Username not found!");
     }
 
-    public Collection<Person> searchPeople(String searchPhrase) { return personRepository.findAllByUsernameLike("%" + searchPhrase + "%"); }
+    public Collection<Person> searchPeople(String searchPhrase) { return personRepository.findAllByUsernameMatches(searchPhrase); }
 
     public Person getPersonByUsername(String username) {
         Optional<Person> person = personRepository.findByUsername(username);

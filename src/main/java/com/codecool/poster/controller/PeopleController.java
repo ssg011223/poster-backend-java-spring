@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @AllArgsConstructor
-@CrossOrigin(origins = "*")
+@CrossOrigin(origins = {"${cross.origin.port.number}"})
 public class PeopleController {
 
     private final PersonService personService;
