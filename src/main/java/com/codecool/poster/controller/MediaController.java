@@ -14,7 +14,7 @@ import java.io.InputStream;
 
 @Controller
 @RequestMapping("/media")
-@CrossOrigin(origins = "*")
+@CrossOrigin(origins = {"${cross.origin.port.number}"})
 public class MediaController {
     @Autowired
     private MediaService mediaService;

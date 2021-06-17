@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/posts")
-@CrossOrigin(origins = "*")
+@CrossOrigin(origins = {"${cross.origin.port.number}"})
 public class PostController {
     @Autowired
     private PostService postService;
