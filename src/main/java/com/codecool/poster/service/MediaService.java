@@ -12,6 +12,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -26,13 +28,14 @@ public class MediaService {
 
     public String submit(MultipartFile file) {
         String extension = FilenameUtils.getExtension(file.getOriginalFilename());
-        String route = "poster-backend-java-spring/src/main/resources/media/" + UUID.randomUUID() + "." + extension;
+        String route = "./src/main/resources/media/" + UUID.randomUUID() + "." + extension;
         try {
-            file.transferTo(new File(route));
+            Files.write(Paths.get(route), file.getBytes());
+            return route;
         } catch (IOException e) {
             e.printStackTrace();
+            return null;
         }
-        return route;
     }
 
     public Collection<String> submit(MultipartFile[] files) {
@@ -51,9 +54,9 @@ public class MediaService {
         return mediaRepository.findAllByPostIdIn(id);
     }
 
-    public InputStream getImageInputStreamById(long id) {
+    public byte[] getImageById(long id) {
         Media media = mediaRepository.findById(id).orElse(null);
-        PersonMedia personMedia = null;
+        PersonMedia personMedia;
         String route = "";
 
         if (media != null)
@@ -67,22 +70,20 @@ public class MediaService {
             route = personMedia.getMediaRoute();
         }
 
-        InputStream in = null;
         try {
-            in = new FileInputStream(route);
-        } catch (FileNotFoundException e) {
+            return Files.readAllBytes(Paths.get(route));
+        } catch (IOException e) {
             e.printStackTrace();
+            return null;
         }
-        return in;
     }
 
-    public InputStream getDefaultImage() {
-        InputStream in = null;
+    public byte[] getDefaultImage() {
         try {
-            in = new FileInputStream("src/main/resources/media/basic_wallaper.jpg");
-        } catch (FileNotFoundException e) {
+            return Files.readAllBytes(Paths.get("./src/main/resources/media/basic_wallaper.jpg"));
+        } catch (IOException e) {
             e.printStackTrace();
+            return null;
         }
-        return in;
     }
 }

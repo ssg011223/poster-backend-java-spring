@@ -21,10 +21,9 @@ public class MediaController {
 
     @GetMapping(value = "/{id}", produces = {MediaType.IMAGE_GIF_VALUE, MediaType.IMAGE_PNG_VALUE, MediaType.IMAGE_JPEG_VALUE})
     public @ResponseBody byte[] getImage(@PathVariable String id) throws IOException {
-        InputStream in = mediaService.getImageInputStreamById(Long.parseLong(id));
-        return IOUtils.toByteArray(in);
+        return mediaService.getImageById(Long.parseLong(id));
     }
 
     @GetMapping(value = "/default-image", produces = MediaType.IMAGE_JPEG_VALUE)
-    public @ResponseBody byte[] defaultImage() throws IOException { return IOUtils.toByteArray(mediaService.getDefaultImage()); }
+    public @ResponseBody byte[] defaultImage() throws IOException { return mediaService.getDefaultImage(); }
 }
