@@ -15,8 +15,9 @@ public interface PersonRepository extends JpaRepository<Person, Long> {
 
     Optional<Person> findByUsername(String username);
 
-    Collection<Person> findAllByUsernameMatches(String searchPhrase);
+    Collection<Person> findAllByUsernameStartsWithIgnoreCase(String searchPhrase);
 
     @Query("SELECT p FROM Person as p WHERE p.id <> :id")
     Collection<Person> findAllExpectOnePerson(long id);
+
 }

@@ -5,6 +5,7 @@ import com.codecool.poster.model.UserCredentials;
 import com.codecool.poster.security.CustomUser;
 import com.codecool.poster.security.jwt.JwtService;
 import com.codecool.poster.service.PersonService;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,17 +29,16 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @RestController
+@AllArgsConstructor
 @RequestMapping("/auth")
 public class AuthController {
 
-    @Autowired
-    private JwtService jwtService;
+    private final JwtService jwtService;
 
-    @Autowired
-    private PersonService personService;
+    private final PersonService personService;
 
-    @Autowired
-    private AuthenticationManager authenticationManager;
+    private final AuthenticationManager authenticationManager;
+
     private final String TOKEN_FIELD_NAME = "token";
     private final String TOKEN_BEARER = "Bearer";
     private final String TOKEN_PATH = "/";
