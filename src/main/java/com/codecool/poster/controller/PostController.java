@@ -7,6 +7,7 @@ import com.codecool.poster.model.post.SendPost;
 import com.codecool.poster.repository.FollowRepository;
 import com.codecool.poster.security.jwt.JwtService;
 import com.codecool.poster.service.MediaService;
+import com.codecool.poster.service.PersonService;
 import com.codecool.poster.service.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -32,13 +33,30 @@ public class PostController {
     @Autowired
     private FollowRepository followRepository;
 
+    @GetMapping(path = "/profile/{id}")
+    public ResponseEntity getProfilePosts(@PathVariable long id,
+                                          HttpServletRequest req) {
+        String token = jwtService.getTokenFromRequest(req);
+        if (token == null)
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+
+        Collection<Post> posts = postService.findAllByPersonIdIn(Collections.singleton(id));
+
+        Collection<Post> interactionPosts = postService.getPostsWithInteractions(posts);
+
+        Collection<SendPost> mediaPosts = postService.getPostsWithMedia(interactionPosts);
+
+        Map<Object, Object> postsMap = new HashMap<>();
+        postsMap.put("posts", mediaPosts);
+
+        return ResponseEntity.ok(postsMap);
+    }
 
     @GetMapping
     public ResponseEntity getAllPostsPersonalized(HttpServletRequest req, HttpServletResponse res) {
         String token = jwtService.getTokenFromRequest(req);
-        if (token == null) {
+        if (token == null)
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        }
 
         long id = jwtService.parseIdFromTokenInfo(token);
         List<FollowWithFollowed> follows = followRepository.findAllByFollowerPersonId(id);
