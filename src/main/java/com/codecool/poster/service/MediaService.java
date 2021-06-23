@@ -80,7 +80,16 @@ public class MediaService {
 
     public byte[] getDefaultImage() {
         try {
-            return Files.readAllBytes(Paths.get("./src/main/resources/media/basic_wallaper.jpg"));
+            return Files.readAllBytes(Paths.get("./src/main/resources/media/basic_wallpaper.jpg"));
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public byte[] getBackgroundImage() {
+        try {
+            return Files.readAllBytes(Paths.get("./src/main/resources/media/background_wallpaper.jpg"));
         } catch (IOException e) {
             e.printStackTrace();
             return null;
