@@ -26,6 +26,8 @@ public class MediaService {
     private final MediaRepository mediaRepository;
     private final PersonMediaRepository personMediaRepository;
 
+    private static final String DEFAULT_MEDIA_PATH = "./src/main/resources/defaultMedia/";
+
     public String submit(MultipartFile file) {
         String extension = FilenameUtils.getExtension(file.getOriginalFilename());
         String route = "./src/main/resources/media/" + UUID.randomUUID() + "." + extension;
@@ -80,7 +82,7 @@ public class MediaService {
 
     public byte[] getDefaultImage() {
         try {
-            return Files.readAllBytes(Paths.get("./src/main/resources/media/basic_wallpaper.jpg"));
+            return Files.readAllBytes(Paths.get(DEFAULT_MEDIA_PATH + "basic_wallpaper.jpg"));
         } catch (IOException e) {
             e.printStackTrace();
             return null;
@@ -89,7 +91,7 @@ public class MediaService {
 
     public byte[] getBackgroundImage() {
         try {
-            return Files.readAllBytes(Paths.get("./src/main/resources/media/background_wallpaper.jpg"));
+            return Files.readAllBytes(Paths.get(DEFAULT_MEDIA_PATH + "background_wallpaper.jpg"));
         } catch (IOException e) {
             e.printStackTrace();
             return null;
